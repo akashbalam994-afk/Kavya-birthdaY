@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Birthday Surprise 🎂</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background: linear-gradient(-45deg, #1a0b2e, #3b185f, #a12568, #2a0944);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bg-elements, .floating-pics-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .floater {
+            position: absolute;
+            bottom: -60px;
+            font-size: 28px;
+            opacity: 0.6;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            20% { opacity: 0.75; }
+            80% { opacity: 0.75; }
+            100% {
+                transform: translateY(-115vh) rotate(360deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        /* Floating Photos in Background Air on Final Screen */
+        .air-photo {
+            position: absolute;
+            bottom: -140px;
+            width: 78px;
+            height: 98px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 215, 0, 0.75);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 64, 129, 0.5);
+            animation: floatPhotoAir linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatPhotoAir {
+            0% {
+                transform: translateY(0) rotate(-12deg) scale(0.8);
+                opacity: 0;
+            }
+            15% { opacity: 0.88; }
+            85% { opacity: 0.88; }
+            100% {
+                transform: translateY(-125vh) rotate(18deg) scale(1.05);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            width: 92%;
+            max-width: 420px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 24px 18px;
+            border-radius: 26px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.75) translateY(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .card-exit {
+            animation: popOut 0.35s ease forwards;
+        }
+
+        @keyframes popOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.85) translateY(-20px);
+            }
+        }
+
+        .emoji-bounce {
+            font-size: 40px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+            margin-bottom: 4px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        h1 {
+            font-size: 21px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        .subtitle {
+            color: #FFD700;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .question {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 15px;
+            width: 100%;
+            border-radius: 14px;
+            font-size: 14.5px;
+            margin: 5px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 64, 129, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.94);
+            background: #FF4081;
+            border-color: #FF4081;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #FF4081, #FF9100);
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 12px;
+            margin-top: 6px;
+            box-shadow: 0 8px 25px rgba(255, 64, 129, 0.5);
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 64, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
+        }
+
+        .reaction-box {
+            min-height: 16px;
+            margin-top: 5px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #FFD700;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .reaction-show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Pop-up Surprise Photo & Quote Styling */
+        .surprise-pic-frame {
+            width: 170px;
+            height: 200px;
+            margin: 4px auto 10px auto;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 3px solid #FFD700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 15px rgba(255, 64, 129, 0.5);
+            animation: zoomBurst 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes zoomBurst {
+            0% { transform: scale(0.3) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .surprise-pic-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .flow-quote {
+            font-size: 13px;
+            font-style: italic;
+            color: #FFD700;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #FF4081;
+            line-height: 1.4;
+        }
+
+        /* FINAL CARD: Full Transparent Photo Background */
+        .final-card-bg {
+            background: linear-gradient(to bottom, rgba(15, 5, 29, 0.42), rgba(15, 5, 29, 0.82)), url('kavya.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            border: 2px solid rgba(255, 215, 0, 0.65) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 64, 129, 0.4) !important;
+            padding: 26px 18px !important;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .final-quote-badge {
+            font-size: 12px;
+            font-style: italic;
+            color: #FFD700;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 6px 10px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            border-left: 3px solid #FFD700;
+            backdrop-filter: blur(4px);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+        }
+
+        .wish-static-text {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.42);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(6px);
+            text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+        }
+
+        /* Secret Code / Note Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: linear-gradient(135deg, #2a0944, #3b185f);
+            border: 2px solid #FFD700;
+            width: 88%;
+            max-width: 360px;
+            padding: 24px 20px;
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-overlay.show .modal-card {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-elements" id="bg-elements"></div>
+    <!-- Container for floating background photos on the final screen -->
+    <div class="floating-pics-bg hidden" id="floating-pics-bg"></div>
+
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="screen-0" class="card">
+            <div class="emoji-bounce">🎁</div>
+            <div class="subtitle">Top Secret Mission</div>
+            <h1>Hey Kavyaaaah! 👀</h1>
+            <p style="font-size: 14px; line-height: 1.5; margin-bottom: 15px; color: #eee;">
+                Someone made a special surprise just for you. Answer 3 quick questions to unlock it!
+            </p>
+            <button class="btn start-btn" onclick="transitionScreen('screen-0', 'screen-1', 'Unlocking Stage 1... 🔐', false)">
+                Tap to Unlock 🚀
+            </button>
+            <div id="react-screen-0" class="reaction-box"></div>
+        </div>
+
+        <!-- Question 1 -->
+        <div id="screen-1" class="card hidden">
+            <div class="subtitle">Lock 1 of 3 🔒</div>
+            <div class="question">Who gets angry more often between us? 😤</div>
+            <button class="btn" onclick="transitionScreen('screen-1', 'pic-screen-1', 'Haha! 100% agreed 😂 Surprise incoming...', true)">You (Obviously) 🙈</button>
+            <button class="btn" onclick="transitionScreen('screen-1', 'pic-screen-1', 'Nice try, lie detected! 😜 Look here...', true)">Me 😇</button>
+            <button class="btn" onclick="transitionScreen('screen-1', 'pic-screen-1', 'Diplomacy level 100! 😎 Surprise!', true)">Both equal 🤝</button>
+            <div id="react-screen-1" class="reaction-box"></div>
+        </div>
+
+        <!-- Blast Pic & Quote 1 -->
+        <div id="pic-screen-1" class="card hidden">
+            <div class="subtitle">Mini Surprise #1 💥</div>
+            <div class="surprise-pic-frame">
+                <img src="kavya1.jpg" alt="Kavya Surprise 1">
+            </div>
+            <div class="flow-quote">
+                "No matter how much you get angry, your cute little smile always wins my heart! ✨"
+            </div>
+            <button class="btn start-btn" onclick="transitionScreen('pic-screen-1', 'screen-2', 'Going to Lock 2... 🔓', false)">
+                Next Question ➡️
+            </button>
+            <div id="react-pic-screen-1" class="reaction-box"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div id="screen-2" class="card hidden">
+            <div class="subtitle">Lock 2 of 3 🔓</div>
+            <div class="question">What makes our bond so special? ✨</div>
+            <button class="btn" onclick="transitionScreen('screen-2', 'pic-screen-mid', 'Always & forever! 💛 Surprise #2 incoming...', true)">Pure love & trust 💫</button>
+            <button class="btn" onclick="transitionScreen('screen-2', 'pic-screen-mid', 'Zero drama, pure vibes! 🥰 Look here...', true)">My absolute safe zone 🛡️</button>
+            <button class="btn" onclick="transitionScreen('screen-2', 'pic-screen-mid', 'Best answer ever! ✨ Surprise incoming...', true)">Everything about us 💖</button>
+            <div id="react-screen-2" class="reaction-box"></div>
+        </div>
+
+        <!-- Blast Pic & Quote Mid -->
+        <div id="pic-screen-mid" class="card hidden">
+            <div class="subtitle">Mini Surprise #2 💥</div>
+            <div class="surprise-pic-frame">
+                <img src="kavya3.jpg" alt="Kavya Surprise Mid">
+            </div>
+            <div class="flow-quote">
+                "Every single moment spent with you becomes my favorite memory! 🌸"
+            </div>
+            <button class="btn start-btn" onclick="transitionScreen('pic-screen-mid', 'screen-3', 'Going to Final Lock... 🗝️', false)">
+                Final Question ➡️
+            </button>
+            <div id="react-pic-screen-mid" class="reaction-box"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div id="screen-3" class="card hidden">
+            <div class="subtitle">Final Lock 3 of 3 🗝️</div>
+            <div class="question">How long is this bond going to last? ♾️</div>
+            <button class="btn" onclick="transitionScreen('screen-3', 'pic-screen-2', 'Boom! Look who is here... 🎉', true)">Beyond lifetime 🚀</button>
+            <button class="btn" onclick="transitionScreen('screen-3', 'pic-screen-2', 'Get ready for magic... ✨', true)">Forever & Always 💫</button>
+            <button class="btn" onclick="transitionScreen('screen-3', 'pic-screen-2', 'Unlocked! 🥳', true)">Unbreakable Bond 🤝</button>
+            <div id="react-screen-3" class="reaction-box"></div>
+        </div>
+
+        <!-- Blast Pic & Quote 3 -->
+        <div id="pic-screen-2" class="card hidden">
+            <div class="subtitle">Mini Surprise #3 💥</div>
+            <div class="surprise-pic-frame">
+                <img src="kavya2.jpg" alt="Kavya Surprise 3">
+            </div>
+            <div class="flow-quote">
+                "Some people come into your life and make everything brighter. You are definitely one of them! 💫"
+            </div>
+            <button class="btn start-btn" onclick="transitionScreen('pic-screen-2', 'screen-4', 'Opening Final Wishes... 🎂', true)">
+                Open Birthday Wishes 🎁
+            </button>
+            <div id="react-pic-screen-2" class="reaction-box"></div>
+        </div>
+
+        <!-- Final Celebration Screen: Transparent Photo Box + Static Wishes -->
+        <div id="screen-4" class="card final-card-bg hidden">
+            <div class="subtitle" style="margin-bottom: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);">Surprise Unlocked! ✨</div>
+            <h1 style="color: #FFD700; font-size: 21px; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.95);">Happy Birthday, Kavyaaaah! 🎂</h1>
+            
+            <div class="final-quote-badge">
+                "A true friend is one soul in two bodies — lucky to have you forever! 💫"
+            </div>
+
+            <div class="wish-static-text">
+                You are truly the most amazing person and an unforgettable part of my life. Thank you for always being there through thick and thin! Keep smiling always! ✨💖
+            </div>
+
+            <button class="btn start-btn" style="margin-top: 4px; font-size: 14.5px; padding: 12px;" onclick="blowCandleAndOpenSecret()">
+                🎂 Blow Candle & Open Secret!
+            </button>
+        </div>
+    </div>
+
+    <!-- Secret Code / Note Modal Popup -->
+    <div class="modal-overlay" id="secretModal">
+        <div class="modal-card">
+            <div style="font-size: 36px; margin-bottom: 6px;">💌</div>
+            <h3 style="color: #FFD700; font-size: 18px; margin-bottom: 10px;">Secret Note Unlocked! ✨</h3>
+            <p style="font-size: 13.5px; line-height: 1.6; color: #fce4ec; margin-bottom: 16px;">
+                "Seeing you happy always is my only wish. Hoping you keep smiling forever and our bond stays this perfect... Happy Birthday once again, Kavya! 🎉✨"
+            </p>
+            <button class="btn" style="background: linear-gradient(45deg, #FF4081, #FF9100); border: none;" onclick="closeSecretNote()">
+                Close ✨
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const emojis = ['🎈', '✨', '🎂', '🎉', '💖', '🎁', '🥳', '🌸', '💫'];
+        const bgContainer = document.getElementById('bg-elements');
+
+        for (let i = 0; i < 20; i++) {
+            const el = document.createElement('div');
+            el.className = 'floater';
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 6 + 6) + 's';
+            el.style.animationDelay = (Math.random() * 5) + 's';
+            el.style.fontSize = (Math.random() * 14 + 20) + 'px';
+            bgContainer.appendChild(el);
+        }
+
+        // Start floating photos in background air on the final screen
+        let airPhotosStarted = false;
+        function startFloatingAirPhotos() {
+            if (airPhotosStarted) return;
+            airPhotosStarted = true;
+
+            const picsContainer = document.getElementById('floating-pics-bg');
+            picsContainer.classList.remove('hidden');
+
+            const photoList = ['kavya.jpg', 'kavya1.jpg', 'kavya2.jpg', 'kavya3.jpg', 'kavya4.jpg', 'kavya5.jpg', 'kavya6.jpg', 'kavya7.jpg', 'kavya8.jpg'];
+            const positions = ['2vw', '12vw', '22vw', '32vw', '42vw', '52vw', '62vw', '72vw', '82vw'];
+
+            for (let i = 0; i < 18; i++) {
+                const img = document.createElement('img');
+                img.src = photoList[i % photoList.length];
+                img.className = 'air-photo';
+                img.style.left = positions[i % positions.length];
+                img.style.animationDuration = (Math.random() * 4 + 9) + 's';
+                img.style.animationDelay = (i * 0.7) + 's';
+                picsContainer.appendChild(img);
+            }
+        }
+
+        // Continuous Loop Continuous Background Birthday Melody Player (Web Audio API)
+        let melodyInterval = null;
+        function playContinuousBirthdayMelody() {
+            if (melodyInterval) return;
+
+            function playMelodyLoop() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const ctx = new AudioContext();
+                    
+                    const notes = [261.63, 261.63, 293.66, 261.63, 349.23, 329.63, 261.63, 261.63, 293.66, 261.63, 392.00, 349.23];
+                    const times = [0.4, 0.4, 0.8, 0.8, 0.8, 1.2, 0.4, 0.4, 0.8, 0.8, 0.8, 1.2];
+                    
+                    let currTime = ctx.currentTime;
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, currTime);
+                        
+                        gain.gain.setValueAtTime(0.12, currTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, currTime + times[idx]);
+                        
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        osc.start(currTime);
+                        osc.stop(currTime + times[idx]);
+                        currTime += times[idx] + 0.05;
+                    });
+                } catch(e) {
+                    console.log("Audio loop error", e);
+                }
+            }
+
+            playMelodyLoop();
+            // Loop the melody every 7.5 seconds continuously
+            melodyInterval = setInterval(playMelodyLoop, 7500);
+        }
+
+        let isTransitioning = false;
+
+        function transitionScreen(currentId, nextId, reactionMessage, shouldBlast) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const currentCard = document.getElementById(currentId);
+            const reactionBox = document.getElementById('react-' + currentId);
+
+            if (reactionBox && reactionMessage) {
+                reactionBox.innerText = reactionMessage;
+                reactionBox.classList.add('reaction-show');
+            }
+
+            setTimeout(() => {
+                currentCard.classList.add('card-exit');
+
+                setTimeout(() => {
+                    currentCard.classList.add('hidden');
+                    currentCard.classList.remove('card-exit');
+                    if (reactionBox) reactionBox.classList.remove('reaction-show');
+
+                    const nextCard = document.getElementById(nextId);
+                    nextCard.classList.remove('hidden');
+                    isTransitioning = false;
+
+                    if (shouldBlast) {
+                        fireConfetti();
+                    }
+
+                    if (nextId === 'screen-4') {
+                        startFloatingAirPhotos();
+                        playContinuousBirthdayMelody();
+                        fireConfetti();
+                    }
+                }, 350);
+            }, 750);
+        }
+
+        function blowCandleAndOpenSecret() {
+            fireConfetti();
+            setTimeout(() => {
+                document.getElementById('secretModal').classList.add('show');
+                fireConfetti();
+            }, 500);
+        }
+
+        function closeSecretNote() {
+            document.getElementById('secretModal').classList.remove('show');
+        }
+
+        function fireConfetti() {
+            confetti({
+                particleCount: 110,
+                spread: 75,
+                origin: { y: 0.6 }
+            });
+            setTimeout(() => {
+                confetti({
+                    particleCount: 65,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 65,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 250);
+        }
+    </script>
+</body>
+</html>
