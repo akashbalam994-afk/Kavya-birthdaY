@@ -67,13 +67,13 @@
             }
         }
 
-        /* Floating Photos in Background Air on Final Screen */
+        /* Floating Photos Spread Across the Screen (Clumsy fix applied) */
         .air-photo {
             position: absolute;
             bottom: -140px;
-            width: 78px;
-            height: 98px;
-            border-radius: 14px;
+            width: 72px;
+            height: 90px;
+            border-radius: 12px;
             object-fit: cover;
             border: 2px solid rgba(255, 215, 0, 0.75);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 64, 129, 0.5);
@@ -83,13 +83,13 @@
 
         @keyframes floatPhotoAir {
             0% {
-                transform: translateY(0) rotate(-12deg) scale(0.8);
+                transform: translateY(0) rotate(-10deg) scale(0.75);
                 opacity: 0;
             }
-            15% { opacity: 0.88; }
-            85% { opacity: 0.88; }
+            15% { opacity: 0.85; }
+            85% { opacity: 0.85; }
             100% {
-                transform: translateY(-125vh) rotate(18deg) scale(1.05);
+                transform: translateY(-125vh) rotate(15deg) scale(1.05);
                 opacity: 0;
             }
         }
@@ -239,7 +239,6 @@
             display: none !important;
         }
 
-        /* Pop-up Surprise Photo & Quote Styling */
         .surprise-pic-frame {
             width: 170px;
             height: 200px;
@@ -274,7 +273,6 @@
             line-height: 1.4;
         }
 
-        /* FINAL CARD: Full Transparent Photo Background */
         .final-card-bg {
             background: linear-gradient(to bottom, rgba(15, 5, 29, 0.42), rgba(15, 5, 29, 0.82)), url('kavya.jpg') !important;
             background-size: cover !important;
@@ -314,7 +312,6 @@
             margin-bottom: 10px;
         }
 
-        /* Secret Code / Note Modal Popup */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -358,7 +355,6 @@
 <body>
 
     <div class="bg-elements" id="bg-elements"></div>
-    <!-- Container for floating background photos on the final screen -->
     <div class="floating-pics-bg hidden" id="floating-pics-bg"></div>
 
     <div class="container">
@@ -386,7 +382,7 @@
             <div id="react-screen-1" class="reaction-box"></div>
         </div>
 
-        <!-- Blast Pic & Quote 1 -->
+        <!-- Blast Pic & Quote 1 (Fixed image source) -->
         <div id="pic-screen-1" class="card hidden">
             <div class="subtitle">Mini Surprise #1 💥</div>
             <div class="surprise-pic-frame">
@@ -451,7 +447,7 @@
             <div id="react-pic-screen-2" class="reaction-box"></div>
         </div>
 
-        <!-- Final Celebration Screen: Transparent Photo Box + Static Wishes -->
+        <!-- Final Celebration Screen -->
         <div id="screen-4" class="card final-card-bg hidden">
             <div class="subtitle" style="margin-bottom: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);">Surprise Unlocked! ✨</div>
             <h1 style="color: #FFD700; font-size: 21px; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.95);">Happy Birthday, Kavyaaaah! 🎂</h1>
@@ -499,7 +495,7 @@
             bgContainer.appendChild(el);
         }
 
-        // Start floating photos in background air on the final screen
+        // Floating photos logic updated to spread evenly without clumping
         let airPhotosStarted = false;
         function startFloatingAirPhotos() {
             if (airPhotosStarted) return;
@@ -509,7 +505,7 @@
             picsContainer.classList.remove('hidden');
 
             const photoList = ['kavya.jpg', 'kavya1.jpg', 'kavya2.jpg', 'kavya3.jpg', 'kavya4.jpg', 'kavya5.jpg', 'kavya6.jpg', 'kavya7.jpg', 'kavya8.jpg'];
-            const positions = ['2vw', '12vw', '22vw', '32vw', '42vw', '52vw', '62vw', '72vw', '82vw'];
+            const positions = ['4vw', '15vw', '26vw', '38vw', '50vw', '62vw', '74vw', '85vw', '92vw'];
 
             for (let i = 0; i < 18; i++) {
                 const img = document.createElement('img');
@@ -517,12 +513,11 @@
                 img.className = 'air-photo';
                 img.style.left = positions[i % positions.length];
                 img.style.animationDuration = (Math.random() * 4 + 9) + 's';
-                img.style.animationDelay = (i * 0.7) + 's';
+                img.style.animationDelay = (i * 0.6) + 's';
                 picsContainer.appendChild(img);
             }
         }
 
-        // Continuous Loop Continuous Background Birthday Melody Player (Web Audio API)
         let melodyInterval = null;
         function playContinuousBirthdayMelody() {
             if (melodyInterval) return;
@@ -558,7 +553,6 @@
             }
 
             playMelodyLoop();
-            // Loop the melody every 7.5 seconds continuously
             melodyInterval = setInterval(playMelodyLoop, 7500);
         }
 
